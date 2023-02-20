@@ -1,0 +1,73 @@
+server:
+  port: 8888
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.1.131:8848
+    gateway:
+      routes:
+        - id: sms-route
+          uri: lb://sms-server  # 使用服务名访问,实现负载均衡
+          predicates:
+            - Path=/sms/**    # 匹配以provider开头的路径
+        - id: pms-route
+          uri: lb://pms-server
+          predicates:
+            - Path=/pms/**
+        - id: oms-route
+          uri: lb://oms-server
+          predicates:
+            - Path=/oms/**
+        - id: ums-route
+          uri: lb://ums-server
+          predicates:
+            - Path=/ums/**
+        - id: wms-route
+          uri: lb://wms-server
+          predicates:
+            - Path=/wms/**
+#          filters:
+#            - RewritePath=/provider/(?<segment>.*),/$\{segment}  # 路径重写(去掉provider)
+        - id: search-route
+          uri: lb://gmall-search
+          predicates:
+            - Path=/api/search/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: index-route
+          uri: lb://gmall-index
+          predicates:
+            - Path=/api/index/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}  # 路径重写(api)
+#           - Auth
+        - id: item-route
+          uri: lb://gmall-item
+          predicates:
+            - Path=/api/item/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: auth-route
+          uri: lb://auth-server
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: order-route
+          uri: lb://order-server
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: pay-route
+          uri: lb://pay-server
+          predicates:
+            - Path=/api/pay/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}                            
+
+gmall:
+  jwt:
+    pubKeyPath: rsa.pub # 公钥地址
+    cookieName: GMALL_TOKEN # cookie的名称            
