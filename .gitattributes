@@ -1,2 +1,3 @@
 *.java linguist-language=java
 *.pdf linguist-language=java
+*.md linguist-language=java
